@@ -44,8 +44,8 @@ from transformers.models.llama.modeling_llama import (
     _CONFIG_FOR_DOC,
     LLAMA_INPUTS_DOCSTRING,
     LLAMA_START_DOCSTRING,
-    LlamaDynamicNTKScalingRotaryEmbedding,
-    LlamaLinearScalingRotaryEmbedding,
+    # LlamaDynamicNTKScalingRotaryEmbedding,
+    # LlamaLinearScalingRotaryEmbedding,
     LlamaMLP,
     LlamaPreTrainedModel,
     LlamaRMSNorm,
@@ -124,25 +124,25 @@ class KblamLlamaAttention(nn.Module):
                 max_position_embeddings=self.max_position_embeddings,
                 base=self.rope_theta,
             )
-        else:
-            scaling_type = self.config.rope_scaling["type"]
-            scaling_factor = self.config.rope_scaling["factor"]
-            if scaling_type == "linear":
-                self.rotary_emb = LlamaLinearScalingRotaryEmbedding(
-                    self.head_dim,
-                    max_position_embeddings=self.max_position_embeddings,
-                    scaling_factor=scaling_factor,
-                    base=self.rope_theta,
-                )
-            elif scaling_type == "dynamic":
-                self.rotary_emb = LlamaDynamicNTKScalingRotaryEmbedding(
-                    self.head_dim,
-                    max_position_embeddings=self.max_position_embeddings,
-                    scaling_factor=scaling_factor,
-                    base=self.rope_theta,
-                )
-            else:
-                raise ValueError(f"Unknown RoPE scaling type {scaling_type}")
+        # else:
+        #     scaling_type = self.config.rope_scaling["type"]
+        #     scaling_factor = self.config.rope_scaling["factor"]
+        #     if scaling_type == "linear":
+        #         self.rotary_emb = LlamaLinearScalingRotaryEmbedding(
+        #             self.head_dim,
+        #             max_position_embeddings=self.max_position_embeddings,
+        #             scaling_factor=scaling_factor,
+        #             base=self.rope_theta,
+        #         )
+            # elif scaling_type == "dynamic":
+            #     self.rotary_emb = LlamaDynamicNTKScalingRotaryEmbedding(
+            #         self.head_dim,
+            #         max_position_embeddings=self.max_position_embeddings,
+            #         scaling_factor=scaling_factor,
+            #         base=self.rope_theta,
+            #     )
+            # else:
+            #     raise ValueError(f"Unknown RoPE scaling type {scaling_type}")
 
     def prune_key_value(self, query, kb_keys, kb_values, topk_size=20):
         assert (

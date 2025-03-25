@@ -90,6 +90,10 @@ parser.add_argument("--dynamic_kb_size", nargs=2, type=int, default=None, help="
 parser.add_argument("--duplicate_true_kb", action=argparse.BooleanOptionalAction, default=True, help="Duplicate true entity's KB token")
 parser.add_argument("--length_invariance", action=argparse.BooleanOptionalAction, default=False, help="Scale the raw attention score")
 parser.add_argument("--outlier_num", type=int, default=1, help="Introduce questions without correct KB entites")
+parser.add_argument(
+    "--outlier_ratio", type=float, default=-1,
+    help="Ratio of questions that have no corresponding KB entity (e.g., 0.1 = 10% outliers)"
+)
 parser.add_argument("--multi_entities", type=int, default=2, help="Introduce questions involving multiple entities")
 parser.add_argument("--use_extended_qa", action="store_true", help="Introduce QA with extended open-ended parts")
 parser.add_argument("--kb_token_layer_frequency", type=int, default=3, help="Introduce QA with extended open-ended parts")
@@ -730,7 +734,7 @@ def main():
 
     if args.log_to_file:
         formatter = logging.Formatter(LOGFORMAT)
-        f_handler = logging.FileHandler(model_save_dir / "log.txt")
+        f_handler = logging.FileHandler(pathlib.Path(model_save_dir) / "log.txt")
         f_handler.setFormatter(formatter)
         logger.addHandler(f_handler)
 
@@ -881,7 +885,7 @@ def main():
         use_data_aug=use_data_aug,
         multi_entities=multi_entities,
         use_extended_qa=use_extended_qa,
-        save_period=500,
+        save_period=2,
         resumed_step=resumed_step,
         kb_config=kb_config,
     )
