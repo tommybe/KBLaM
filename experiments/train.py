@@ -94,6 +94,10 @@ parser.add_argument(
     "--outlier_ratio", type=float, default=-1,
     help="Ratio of questions that have no corresponding KB entity (e.g., 0.1 = 10% outliers)"
 )
+parser.add_argument(
+    "--saving_nth_step", type=float, default=10,
+    help="Defining to save model every nth step"
+)
 parser.add_argument("--multi_entities", type=int, default=2, help="Introduce questions involving multiple entities")
 parser.add_argument("--use_extended_qa", action="store_true", help="Introduce QA with extended open-ended parts")
 parser.add_argument("--kb_token_layer_frequency", type=int, default=3, help="Introduce QA with extended open-ended parts")
@@ -726,6 +730,7 @@ def main():
     llm_type = args.llm_type
     hf_model_spec = args.hf_model_spec
     hf_token = args.hf_token
+    saving_nth_step = args.saving_nth_step
 
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -885,7 +890,7 @@ def main():
         use_data_aug=use_data_aug,
         multi_entities=multi_entities,
         use_extended_qa=use_extended_qa,
-        save_period=2,
+        save_period=saving_nth_step,
         resumed_step=resumed_step,
         kb_config=kb_config,
     )
